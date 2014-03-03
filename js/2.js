@@ -5,7 +5,7 @@ function Visualization() {
     this.scene = null;
     this.camera = null;
 	this.stats = null;
-    this.particleSystem = null;
+    this.particleSystems = [];
 }
 
 Visualization.prototype.initScene = function(container) {
@@ -65,7 +65,7 @@ Visualization.prototype.initStats = function(container) {
 
 Visualization.prototype.addParticleSystem = function() {
 	// create the particle variables
-	var particleCount = 1800,
+	var particleCount = 10000,
 	    particles = new THREE.Geometry(),
 	    pMaterial = new THREE.ParticleBasicMaterial({
 	      color: 0xFFFFFF,
@@ -106,41 +106,42 @@ Visualization.prototype.addParticleSystem = function() {
 	// add it to the scene
 	this.scene.add(particleSystem);
 
-	this.particleSystem = particleSystem;
+	this.particleSystems.push(particleSystem);
 };
 
 Visualization.prototype.update = function() {
-  var particleSystem = this.particleSystem;
-  var particles = particleSystem.geometry;
+	for (var i = 0; i < this.particleSystems.length; i++) {
+		var particleSystem = this.particleSystems[i];
+		var particles = particleSystem.geometry;
 
-  particleSystem.rotation.y += 0.01;
+		particleSystem.rotation.y += 0.01;
 
-  var pCount = particles.vertices.length;
-  while (pCount--) {
+		var pCount = particles.vertices.length;
+		while (pCount--) {
+			// get the particle
+			var particle =
+			particles.vertices[pCount];
 
-    // get the particle
-    var particle =
-      particles.vertices[pCount];
+			// check if we need to reset
+			if (particle.y < -200) {
+				particle.y = 200;
+				particle.velocity.y = 0;
+			}
 
-    // check if we need to reset
-    if (particle.y < -200) {
-      particle.y = 200;
-      particle.velocity.y = 0;
-    }
+			// update the velocity with
+			// a splat of randomniz
+			particle.velocity.y -= Math.random() * 0.1;
 
-    // update the velocity with
-    // a splat of randomniz
-    particle.velocity.y -= Math.random() * 0.1;
+			// and the position
+			particle.add(particle.velocity);
+		}
 
-    // and the position
-    particle.add(particle.velocity);
-  }
-
-  // flag to the particle system
-  // that we've changed its vertices.
-  particleSystem.
-    geometry.
-    __dirtyVertices = true;
+		// flag to the particle system
+		// that we've changed its vertices.
+		particleSystem.
+		geometry.
+		__dirtyVertices = true;
+	}
 };
 
 Visualization.prototype.render = function() {
