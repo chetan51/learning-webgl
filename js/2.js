@@ -79,16 +79,21 @@ Visualization.prototype.addParticleSystem = function() {
 
 	// now create the individual particles
 	for (var p = 0; p < particleCount; p++) {
+		// create a particle with random
+		// position values, -250 -> 250
+		var pX = Math.random() * 500 - 250,
+		      pY = Math.random() * 500 - 250,
+		      pZ = Math.random() * 500 - 250,
+		      particle = new THREE.Vector3(pX, pY, pZ);
 
-	  // create a particle with random
-	  // position values, -250 -> 250
-	  var pX = Math.random() * 500 - 250,
-	      pY = Math.random() * 500 - 250,
-	      pZ = Math.random() * 500 - 250,
-	      particle = new THREE.Vector3(pX, pY, pZ);
+		// create a velocity vector
+		particle.velocity = new THREE.Vector3(
+			0,              // x
+			-Math.random(), // y: random vel
+			0);             // z
 
-	  // add it to the geometry
-	  particles.vertices.push(particle);
+		// add it to the geometry
+		particles.vertices.push(particle);
 	}
 
 	// create the particle system
@@ -105,7 +110,37 @@ Visualization.prototype.addParticleSystem = function() {
 };
 
 Visualization.prototype.update = function() {
-	this.particleSystem.rotation.y += 0.01;
+  var particleSystem = this.particleSystem;
+  var particles = particleSystem.geometry;
+
+  particleSystem.rotation.y += 0.01;
+
+  var pCount = particles.vertices.length;
+  while (pCount--) {
+
+    // get the particle
+    var particle =
+      particles.vertices[pCount];
+
+    // check if we need to reset
+    if (particle.y < -200) {
+      particle.y = 200;
+      particle.velocity.y = 0;
+    }
+
+    // update the velocity with
+    // a splat of randomniz
+    particle.velocity.y -= Math.random() * 0.1;
+
+    // and the position
+    particle.add(particle.velocity);
+  }
+
+  // flag to the particle system
+  // that we've changed its vertices.
+  particleSystem.
+    geometry.
+    __dirtyVertices = true;
 };
 
 Visualization.prototype.render = function() {
