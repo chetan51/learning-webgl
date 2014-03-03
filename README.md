@@ -1,6 +1,6 @@
 # Learning WebGL and Three.js
 
-From http://aerotwist.com/.
+From http://aerotwist.com/tutorials.
 
 # Usage
 
