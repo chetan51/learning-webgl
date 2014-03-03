@@ -126,7 +126,9 @@ Visualization.prototype.addGUI = function() {
 	var gui = new dat.GUI();
 
 	// widget params
-	// none for now
+	gui.add(this.camera.position, 'x', -100, 100);
+	gui.add(this.camera.position, 'y', -100, 100);
+	gui.add(this.camera.position, 'z', 0, 600);
 
 	this.gui = gui;
 };
