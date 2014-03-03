@@ -96,31 +96,24 @@ Visualization.prototype.addParticleSystem = function() {
 	    particles,
 	    pMaterial);
 
+    particleSystem.sortParticles = true;
+
 	// add it to the scene
 	this.scene.add(particleSystem);
 
 	this.particleSystem = particleSystem;
 };
 
-Visualization.prototype.addLight = function() {
-	// create a point light
-	var pointLight =
-	  new THREE.PointLight(0xFFFFFF);
-
-	// set its position
-	pointLight.position.x = 10;
-	pointLight.position.y = 50;
-	pointLight.position.z = 130;
-
-	// add to the scene
-	this.scene.add(pointLight);
-
-	this.light = pointLight;
+Visualization.prototype.update = function() {
+	this.particleSystem.rotation.y += 0.01;
 };
 
 Visualization.prototype.render = function() {
 	if (this.stats) this.stats.begin();
+
+	this.update();
 	this.renderer.render(this.scene, this.camera);
+
 	if (this.stats) this.stats.end();
 
 	requestAnimationFrame(this.render.bind(this));
