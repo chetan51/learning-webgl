@@ -1,3 +1,7 @@
+# Learning WebGL and Three.js
+
+From http://aerotwist.com/.
+
 # Usage
 
     node webserver.js
