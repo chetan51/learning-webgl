@@ -69,7 +69,12 @@ Visualization.prototype.addParticleSystem = function() {
 	    particles = new THREE.Geometry(),
 	    pMaterial = new THREE.ParticleBasicMaterial({
 	      color: 0xFFFFFF,
-	      size: 20
+	      size: 20,
+	      map: THREE.ImageUtils.loadTexture(
+		    "img/particle.png"
+		  ),
+		  blending: THREE.AdditiveBlending,
+		  transparent: true
 	    });
 
 	// now create the individual particles
